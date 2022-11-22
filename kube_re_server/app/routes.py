@@ -77,10 +77,12 @@ def deployments(namespace):
 def pods(deployment):
     try:
         logger.info('Get: pods for deployment-%s', deployment )        
-        podsDeploymentList = v1.list_pod_for_all_namespaces()
-        for pod in podsDeploymentList.items:
-            # if pod.metadata.selector.
-            print(pod)
+        podsList = v1.list_pod_for_all_namespaces()
+        deploymentsList = v2.list_deployment_for_all_namespaces()
+        for pod in podsList.items:
+            for deployment in deploymentsList.items:                
+                if pod.metadata.labels.app.kubernetes.io/instance == deployment.spec.selector.matchLabels.app.kubernetes.io/instance and pod.metadata.labels.app.kubernetes.io/name == deployment.spec.selector.matchLabels.app.kubernetes.io/name :
+                    print(pod.metadata.name)
     except Exception as error:
         logger.error("Oh no! somthing went worng with the posts page, the error is: " + str(error))
 
