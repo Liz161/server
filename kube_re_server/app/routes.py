@@ -3,7 +3,6 @@ from flask import request
 from prometheus_flask_exporter import PrometheusMetrics
 from kubernetes import client , config
 import logging
-# from app import app
 from flask import Flask
 
 app = Flask(__name__)
@@ -40,6 +39,7 @@ v1 = client.CoreV1Api() # namespaces, services, pods
 v2 = client.AppsV1Api() #deployments
 
 ############################################
+# welcome page with explanations.
 @app.route('/', methods=['GET'])
 def hello_world():
     try:
@@ -106,7 +106,7 @@ def deployments(namespace):
         logger.error("Oh no! an error has been occurred, the error is: " + str(error))
 
 ############################################
-
+# list of pod on a specific deployment
 @app.route('/pods_<deployment>', methods=['GET'])
 def pods(deployment):
     try:
@@ -130,7 +130,7 @@ def pods(deployment):
         logger.error("Oh no! an error has been occurred, the error is: " + str(error))
 
 ############################################
-
+# matrics exporter
 metrics.register_default(
     metrics.counter(
         'by_path_counter', 'Request count by request paths',
