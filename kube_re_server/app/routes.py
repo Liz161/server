@@ -35,8 +35,8 @@ logger.addHandler(console_handler)
 
 ############################################
 # setting of the cluster enviroment 
-v1 = client.CoreV1Api() # namespaces, services, pods
-v2 = client.AppsV1Api() #deployments
+CoreV1Api = client.CoreV1Api() # namespaces, services, pods
+AppsV1Api = client.AppsV1Api() #deployments
 
 ############################################
 # welcome page with explanations.
@@ -66,7 +66,7 @@ to get all the pods in some deployment please refer to /pods_deployment'
 def namespaces():
     try:
         logger.info('Get: list of namespaces')
-        nameSpaceList = v1.list_namespace()
+        nameSpaceList = CoreV1Api.list_namespace()
         nameSpaceListt = ""
         for nameSpace in nameSpaceList.items:
             print(nameSpace.metadata.name)
@@ -81,7 +81,7 @@ def namespaces():
 def services(namespace):
     try:
         logger.info('Get: list of services for namespace-%s',namespace)
-        servicesList = v1.list_namespaced_service(namespace)
+        servicesList = CoreV1Api.list_namespaced_service(namespace)
         servicesListt = ""
         for service in servicesList.items:
             print(service.metadata.name)
@@ -96,7 +96,7 @@ def services(namespace):
 def deployments(namespace):
     try:
         logger.info('Get: deployments for namespace-%s',namespace )
-        deploymentsList = v2.list_namespaced_deployment(namespace)
+        deploymentsList = AppsV1Api.list_namespaced_deployment(namespace)
         deploymentsListt = ""
         for deployment in deploymentsList.items:
             print(deployment.metadata.name)
@@ -111,8 +111,8 @@ def deployments(namespace):
 def pods(deployment):
     try:
         logger.info('Get: pods for deployment-%s', deployment )        
-        podsList = v1.list_pod_for_all_namespaces()
-        deploymentsList = v2.list_deployment_for_all_namespaces()
+        podsList = CoreV1Api.list_pod_for_all_namespaces()
+        deploymentsList = AppsV1Api.list_deployment_for_all_namespaces()
         for deployments in deploymentsList.items:
             if deployments.metadata.name == deployment:
                 label = deployments.spec.selector._match_labels
